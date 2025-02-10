@@ -1,0 +1,229 @@
+---
+title: "Homework1"
+output: html_document
+date: "2025-02-09"
+---
+by Daniel Diaz-Piedra
+
+Question 1: File Import
+
+```{r}
+employeeData <- read.csv("C:\\Users\\nitro\\Downloads\\Typical_Employee_Survey_Data.csv", header = FALSE)
+#feel free to enter your own import statement 
+```
+
+Question 2: Add Header Row
+
+```{r}
+employeeData <- setNames(employeeData, c("Age", "Gender", "Job Satisfaction", "Job Characteristics", "Years Worked", "Promotion Likelihood", "Agency", 
+                         "Budgetary Decisions", "Proud Level", "Organization Loyalty", "Workplace Relations"))
+```
+
+Question 3: Print out 5 Point Summary and Boxplot for each column
+
+```{r, echo = FALSE}
+summary(employeeData)
+boxplot(employeeData[, c("Age", "Gender", "Years Worked")], cex.axis = 0.7)
+boxplot(employeeData[, c("Job Satisfaction", "Job Characteristics", "Promotion Likelihood", "Agency")], cex.axis = 0.7)
+boxplot(employeeData[, c("Budgetary Decisions", "Proud Level", "Organization Loyalty", "Workplace Relations")], cex.axis = 0.7)
+```
+
+Question 4: Converting Columns to Factors
+
+```{r, echo = FALSE}
+employeeData$Gender <- factor(employeeData$Gender, levels = c(1, 2), labels = c("Male", "Female"))
+str(employeeData$Gender)
+
+employeeData$'Job Satisfaction' <- factor(employeeData$'Job Satisfaction', levels = c(1, 2, 3, 4), labels = c("Very Satisfied", "Moderately Satisfied", "A Little Satisfied", "Very Dissatisfied"))
+str(employeeData$'Job Satisfaction')
+
+employeeData$'Job Characteristics' <- factor(employeeData$'Job Characteristics', levels = c(1, 2, 3, 4, 5), labels = c("High Income", "No Danger of\n Being Fired", "Flexible Hours", "Opportunities for\n Advancement", "Enjoying the Work"))
+str(employeeData$'Job Characteristics')
+
+employeeData$'Promotion Likelihood' <- factor(employeeData$'Promotion Likelihood', levels = c(1, 2, 3, 4, 5), labels = c("Very Likely", "Likely", "Not Sure", "Unlikely", "Very Unlikely"))
+str(employeeData$'Promotion Likelihood')
+
+employeeData$Agency <- factor(employeeData$Agency, levels = c(1, 2, 3, 4), labels = c("Always", "Much of the Time", "Sometimes", "Never"))
+str(employeeData$Agency)
+
+employeeData$'Budgetary Decisions' <- factor(employeeData$'Budgetary Decisions', levels = c(1, 2), labels = c("Yes", "No"))
+str(employeeData$'Budgetary Decisions')
+
+employeeData$'Proud Level' <- factor(employeeData$'Proud Level', levels = c(1, 2, 3, 4), labels = c("Very Proud", "Somewhat Proud", "Indifferent", "Not At All Proud"))
+str(employeeData$'Proud Level')
+
+employeeData$'Organization Loyalty' <- factor(employeeData$'Organization Loyalty', levels = c(1, 2, 3, 4, 5), labels = c("Very Likely", "Likely", "Not Sure", "Unlikely", "Very Unlikely"))
+str(employeeData$'Organization Loyalty')
+
+employeeData$'Workplace Relations' <- factor(employeeData$'Workplace Relations', levels = c(1, 2, 3, 4, 5), labels = c("Very Good", "Good", "So So", "Bad", "Very Bad"))
+str(employeeData$'Workplace Relations')
+```
+
+Question 5: Plot the right visual for each column
+
+```{r, echo = FALSE}
+employeeData$AgeBracket <- cut(employeeData$Age, breaks = seq(20, 60, by = 5), right = FALSE, 
+                               labels = c("20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59"))
+barplot(table(employeeData$AgeBracket),
+        main = "Age Distribution by Bracket",
+        xlab = "Age Bracket",
+        ylab = "Frequency", col = "lightgreen")
+averageAge <- mean(employeeData$Age)
+stddevAge <- sd(employeeData$Age)
+lowerBound <- round(averageAge - stddevAge, 1)
+upperBound <- round(averageAge + stddevAge, 1)
+
+```
+
+The average age of employees in this organization is `r round(averageAge, 1)` years. Most employees fall between `r round(lowerBound, 1)` and `r round(upperBound, 1)` years old. The overall work force is fairly young and mostly around the same age
+
+```{r, echo = FALSE}
+barplot(table(employeeData$Gender),
+        main = "Gender Distribution", 
+        xlab = "Gender", 
+        ylab = "Frequency", col = c("lightblue", "lightpink"))
+genderCount <- table(employeeData$Gender)
+percentMale <- (genderCount["Male"] / sum(genderCount)) * 100
+percentFemale <- (genderCount["Female"] / sum(genderCount)) * 100
+```
+
+This organization is `r round(percentMale, 1)`% male and `r round(percentFemale, 1)`% female. This gender ratio might be skewed too much in favor of men
+
+```{r, echo = FALSE}
+barplot(table(employeeData$`Job Characteristics`), 
+        main = "Distribution of Most Important Job Characteristics", 
+        xlab = "",
+        ylab = "Frequency", 
+        col = c("lightblue", "lightpink", "orange", "lightgreen", "purple"), 
+        cex.names = 0.7)
+mtext(side = 1, line = 8, "Job Characteristics", cex = 1)
+```
+
+Members of this organization seem to overwhelmingly care about how enjoyable the work is, and don't seem to care much about the risk of being fired or how flexible their hours are
+
+```{r, echo = FALSE}
+boxplot(employeeData$'Years Worked', 
+        main = "Boxplot of Years Worked", 
+        ylab = "Years Worked", 
+        col = "orange", 
+        horizontal = TRUE)
+under5 <- sum(employeeData$'Years Worked' < 5)
+under10 <- sum(employeeData$'Years Worked' < 10)
+over10 <- sum(employeeData$'Years Worked' >= 10)
+```
+
+Of all employees, `r under5` have worked at the company for less than 5 years, `r under10` have worked for less than 10 years and `r over10` have worked for over 10 years. Overall the average employee has been at the company for a few years and a pretty significant portion stay at the company
+
+```{r, echo = FALSE}
+barplot(table(employeeData$'Promotion Likelihood'), 
+        main = "Distribution of Promotion Likelihood", 
+        xlab = "", 
+        ylab = "Frequency", 
+        col = "aquamarine", 
+        cex.names = 0.9)
+```
+
+Overwhelmingly employees seem to know if they are to be promoted or not, with the split between either side being fairly even with a slight skew towards unlikely to be promoted
+
+```{r, echo = FALSE}
+barplot(table(employeeData$Agency), 
+        main = "Distribution of those who has agency in their work", 
+        xlab = "", 
+        ylab = "Frequency", 
+        col = "cornflowerblue", 
+        cex.names = 0.9)
+```
+
+Overwhelmingly employees feel they have agency in their day to day operations and that their decisions directly impact their work,  hardly anyone feels disconnected between their daily decisions and work 
+
+```{r, echo = FALSE}
+barplot(table(employeeData$'Budgetary Decisions'), 
+        main = "Distribution of those who make Budgetary Decisions", 
+        xlab = "", 
+        ylab = "Frequency", 
+        col = c("firebrick4","midnightblue"), 
+        cex.names = 0.9)
+```
+
+A very large share of employees make budgetary decisions, this means that almost all employees make decisions daily and about half of them are budget related
+
+```{r, echo = FALSE}
+barplot(table(employeeData$'Proud Level'), 
+        main = "Distribution of how Employees feel to be part of this Company", 
+        xlab = "", 
+        ylab = "Frequency", 
+        col = c("mediumseagreen","yellowgreen", "gold", "orchid", "maroon"), 
+        cex.names = 0.9)
+```
+
+Overwhelmingly Employees are happy to be a part of this organization, the number of employees that are not proud is extremely small
+
+```{r, echo = FALSE}
+barplot(table(employeeData$'Organization Loyalty'), 
+        main = "Distribution of how likely Employees are to take a job with better pay", 
+        xlab = "", 
+        ylab = "Frequency", 
+        col = c("mediumseagreen","yellowgreen", "gold", "orchid", "maroon"), 
+        cex.names = 0.9)
+loyaltyCount <- sum(employeeData$'Organization Loyalty' %in% c("Very Likely", "Likely"))
+totalCount <- nrow(employeeData)
+percentLikelyToLeave <- (loyaltyCount / totalCount) * 100
+```
+
+Even though pay was not a massive consideration, and employees are very proud to be part of this organization, `r round(percentLikelyToLeave, 1)`% would likely take a job from another company for better pay
+
+```{r, echo = FALSE}
+barplot(table(employeeData$'Workplace Relations'), 
+        main = "Distribution of how Employees feel about Workplace Relations", 
+        xlab = "", 
+        ylab = "Frequency", 
+        col = c("mediumseagreen","yellowgreen", "gold", "orchid","maroon"), 
+        cex.names = 0.9)
+relationsCount <- sum(employeeData$'Workplace Relations' %in% c("Very Good", "Good"))
+totalCount <- nrow(employeeData)
+percentGoodRelations <- (relationsCount / totalCount) * 100
+```
+
+`r round(percentGoodRelations, 1)`% of respondents say Workplace Relations are Very Good or Good, with the largest share of responses going to Very Good which indicates workers at this organization really enjoy working with each other. Not even a single respondent said Relations are Bad which is awesome!
+
+```{r, echo = FALSE}
+plot(employeeData$Age, employeeData$'Years Worked', 
+     main = "Age vs. Years Worked", 
+     xlab = "Age", ylab = "Years Worked", 
+     pch = 16, col = "slateblue1")
+abline(lm(employeeData$'Years Worked' ~ employeeData$Age), col = "red", lwd = 2)
+```
+
+There seems to be a fairly strong correlation between the age of an employee and the amount of years worked at the company. This implies that employees stick around at this company for a long duration of time
+
+```{r, echo = FALSE}
+plot(employeeData$'Years Worked', employeeData$'Job Satisfaction', 
+     main = "Job Satisfaction vs. Years Worked", 
+     xlab = "Years Worked", ylab = "Job Satisfaction (1 = Low, 4 = High)", 
+     pch = 16, col = "hotpink")
+abline(lm(as.numeric(employeeData$'Job Satisfaction') ~ employeeData$'Years Worked'), col = "red", lwd = 2)
+```
+
+There seems to be a fairly weak negative correlation between job satisfaction between the amount of years worked at the company. Over time employees seem to enjoy working here less and less even if they remain very loyal over time
+
+```{r, echo = FALSE}
+plot(jitter(as.numeric(employeeData$'Promotion Likelihood')), 
+     jitter(as.numeric(employeeData$'Organization Loyalty')), 
+     main = "Promotion Likelihood vs. Organization Loyalty", 
+     xlab = "Promotion Likelihood", 
+     ylab = "Organization Loyalty", 
+     pch = 16, col = "limegreen")
+abline(lm(as.numeric(employeeData$'Organization Loyalty') ~ as.numeric(employeeData$'Promotion Likelihood')), col = "red", lwd = 2)
+```
+
+There seems to be almost no correlation between how loyal someone is to the organization and how likely they are to be promoted
+
+```{r, echo = FALSE}
+plot(employeeData$Age, employeeData$'Promotion Likelihood', 
+     main = "Age vs. Promotion Likelihood", 
+     xlab = "Age", ylab = "Promotion Likelihood", 
+     pch = 16, col = "palegoldenrod")
+abline(lm(as.numeric(employeeData$'Promotion Likelihood') ~ employeeData$Age), col = "red", lwd = 2)
+```
+
+There seems to be a fairly strong correlation between the age of an employee and how likely they are to be employed. This makes sense given a lot of older employees have been at the company for many years
