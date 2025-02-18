@@ -1,0 +1,7 @@
+﻿Variable,Measurement Unit,Description,Data Collection Methodology,Why does this data set intrigue you?
+Entity,Text,Name of the country,,
+Code,Text,Shortened form of country name,,
+Year,Date,Just the year,,
+Day,Date,"The date of data collection, formatted",,
+Monthly Surface Temperature,Float,Monthly temperature recorded in celsius ,,
+Average Monthly Surface Temperature,Float,An average of all months within the year in celsius ,,
